@@ -6,6 +6,17 @@ CREATE TABLE IF NOT EXISTS public.baskets
     CONSTRAINT baskets_pkey PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS public.products
+(
+    id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    name text COLLATE pg_catalog."default",
+    description text COLLATE pg_catalog."default",
+    price numeric,
+    quantity integer,
+    status text COLLATE pg_catalog."default",
+    CONSTRAINT products_pkey PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS public.basket_products
 (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -22,17 +33,6 @@ CREATE TABLE IF NOT EXISTS public.basket_products
     FOREIGN KEY(productid)
     REFERENCES products(id)
 
-);
-
-CREATE TABLE IF NOT EXISTS public.products
-(
-    id uuid NOT NULL DEFAULT uuid_generate_v4(),
-    name text COLLATE pg_catalog."default",
-    description text COLLATE pg_catalog."default",
-    price numeric,
-    quantity integer,
-    status text COLLATE pg_catalog."default",
-    CONSTRAINT products_pkey PRIMARY KEY (id)
 );
 
 ALTER TABLE IF EXISTS public.baskets OWNER to postgres;
