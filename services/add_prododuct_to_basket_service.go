@@ -52,8 +52,10 @@ func (a *AddProductToBasketService) Add(basketId uuid.UUID, productId uuid.UUID,
 		}
 	}
 
-	a.decreaseProductQuantity(product, quantity)
-
+	err = a.decreaseProductQuantity(product, quantity)
+	if err != nil {
+		return err, http.StatusInternalServerError
+	}
 	return nil, http.StatusOK
 }
 

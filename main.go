@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"webserver/controllers"
+	"webserver/services"
 
 	"github.com/gorilla/mux"
 
@@ -37,7 +38,11 @@ func main() {
 	dao := postgresqldao.NewPostgreSql(ctx, conString)
 	defer dao.Disconnect()
 
-	controllers := &controllers.Controller{Dao: dao}
+	addProductToBasketService := &services.AddProductToBasketService{
+		Dao: dao,
+	}
+
+	controllers := &controllers.Controller{Dao: dao, AddProductToBasketService: addProductToBasketService}
 
 	handlers(controllers)
 }
