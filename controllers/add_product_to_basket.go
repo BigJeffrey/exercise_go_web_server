@@ -24,7 +24,7 @@ func (c *Controller) AddProductToBasket(w http.ResponseWriter, r *http.Request) 
 	err, code := c.AddProductToBasketService.Add(productRequest.BasketId, productRequest.ProductId, productRequest.Quantity)
 	if err != nil {
 		ApiError(w, err.Error(), code)
-
+		return
 	}
 
 	ApiSuccess(w, "product added to basket", http.StatusCreated)
