@@ -42,5 +42,8 @@ func (m *PostgreSql) connect(conString string) error {
 }
 
 func (m *PostgreSql) Disconnect() {
-	m.client.Close()
+	err := m.client.Close()
+	if err != nil {
+		log.Println(err)
+	}
 }
