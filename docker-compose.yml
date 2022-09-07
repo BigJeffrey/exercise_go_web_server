@@ -16,12 +16,14 @@ services:
       - 8080
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    environment:
+      POSTGRES_PASSWORD: ${PASSWORD}
 
   database:
     image: postgres:latest
     restart: always
     environment: 
-      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_PASSWORD: ${PASSWORD}
       POSTGRES_USER: postgres
     ports:
       - "5432:5432"

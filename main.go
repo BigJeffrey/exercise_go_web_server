@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"webserver/controllers"
 	"webserver/services"
 
@@ -33,7 +35,7 @@ func handlers(c *controllers.Controller) {
 func main() {
 	ctx := context.Background()
 
-	conString := "postgres://postgres:mysecretpassword@host.docker.internal:5432/postgres?sslmode=disable"
+	conString := fmt.Sprintf("postgres://postgres:%s@host.docker.internal:5432/postgres?sslmode=disable", os.Getenv("POSTGRES_PASSWORD"))
 
 	dao := postgresqldao.NewPostgreSql(ctx, conString)
 	defer dao.Disconnect()
@@ -42,7 +44,7 @@ func main() {
 		Dao: dao,
 	}
 
-	controllers := &controllers.Controller{Dao: dao, AddProductToBasketService: addProductToBasketService}
+	controller := &controllers.Controller{Dao: dao, AddProductToBasketService: addProductToBasketService}
 
-	handlers(controllers)
+	handlers(controller)
 }
