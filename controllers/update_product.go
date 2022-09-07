@@ -2,13 +2,13 @@ package controllers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"webserver/models"
 )
 
 func (c *Controller) UpdateProduct(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		ApiError(w, "can not decode request", http.StatusBadRequest)
 		return

@@ -2,21 +2,21 @@ package controllers
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"webserver/models"
 )
 
 func (c *Controller) GetProductById(w http.ResponseWriter, r *http.Request) {
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		ApiError(w, "can not decode request", http.StatusBadRequest)
 		log.Println(err)
 		return
 	}
 
-	var idReqest models.IdReqest
+	var idReqest models.IdRequest
 	err = json.Unmarshal(body, &idReqest)
 	if err != nil {
 		ApiError(w, "can not decode request", http.StatusBadRequest)
@@ -24,11 +24,11 @@ func (c *Controller) GetProductById(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	productRetrived, err := c.Dao.GetProductById(idReqest.ID)
+	productRetrieved, err := c.Dao.GetProductById(idReqest.ID)
 	if err != nil {
 		ApiError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	ReturnJSON(w, productRetrived, http.StatusOK)
+	ReturnJSON(w, productRetrieved, http.StatusOK)
 }
