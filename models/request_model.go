@@ -17,7 +17,7 @@ type ProductToBasketRequest struct {
 	BasketId  uuid.UUID
 }
 
-type IdReqest struct {
+type IdRequest struct {
 	ID uuid.UUID
 }
 
