@@ -3,14 +3,14 @@ package services
 import (
 	"errors"
 	"net/http"
-	"webserver/dao/interfaces"
+	"webserver/interfaces"
 	"webserver/models"
 
 	"github.com/google/uuid"
 )
 
 type AddProductToBasketService struct {
-	Dao interfaces.AppDao
+	Dao interfaces.PostgresqlInterface
 }
 
 func (a *AddProductToBasketService) Add(basketId uuid.UUID, productId uuid.UUID, quantity int) (error, int) {

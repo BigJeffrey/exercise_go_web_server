@@ -1,4 +1,4 @@
-package postgresqldao
+package mocks
 
 import (
 	"database/sql"
@@ -73,13 +73,13 @@ func (m *PostgreSqlMock) UpdateProduct(product models.Product) error {
 	return nil
 }
 
-func (m *PostgreSqlMock) DeleteProduct(id uuid.UUID) (sql.Result, error) {
+func (m *PostgreSqlMock) DeleteProduct(uuid.UUID) (sql.Result, error) {
 	//to implement
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) FilterProduct(searche string) (*[]models.Product, error) {
+func (m *PostgreSqlMock) FilterProduct(string) ([]models.Product, error) {
 	//to implement
 	return nil, nil
 
@@ -91,7 +91,7 @@ func (m *PostgreSqlMock) CreateBasket() (uuid.UUID, error) {
 
 }
 
-func (m *PostgreSqlMock) GetProductsByPrice(priceSelect models.PriceSelectRequest) ([]models.Product, error) {
+func (m *PostgreSqlMock) GetProductsByPrice(models.PriceSelectRequest) ([]models.Product, error) {
 	//to implement
 	return nil, nil
 
@@ -161,7 +161,7 @@ func (m *PostgreSqlMock) AddProductToBasket(basketProducts models.BasketProducts
 
 }
 
-func (m *PostgreSqlMock) GetProductFromBasketById(basketId uuid.UUID, productId uuid.UUID) (*models.BasketProducts, error) {
+func (m *PostgreSqlMock) GetProductFromBasketById(uuid.UUID, uuid.UUID) (*models.BasketProducts, error) {
 	args := m.Called()
 
 	returnBasketProducts, basketProductsOK := args.Get(0).(*models.BasketProducts)
@@ -208,7 +208,7 @@ func (m *PostgreSqlMock) UpdateProductInBasket(basketProducts models.BasketProdu
 	return nil
 }
 
-func (m *PostgreSqlMock) DeleteProductFromBasket(basketProducts models.BasketProducts) (sql.Result, error) {
+func (m *PostgreSqlMock) DeleteProductFromBasket(models.BasketProducts) (sql.Result, error) {
 	//to implement
 	return nil, nil
 }

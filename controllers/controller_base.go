@@ -3,13 +3,13 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"webserver/dao/interfaces"
+	"webserver/interfaces"
 	"webserver/models"
 	"webserver/services"
 )
 
 type Controller struct {
-	Dao                       interfaces.AppDao
+	Dao                       interfaces.PostgresqlInterface
 	AddProductToBasketService *services.AddProductToBasketService
 }
 

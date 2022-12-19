@@ -5,7 +5,7 @@ import (
 	"github.com/stretchr/testify/mock"
 	"net/http"
 	"testing"
-	postgresqldao "webserver/dao/postgresql"
+	postgresqldao "webserver/mocks"
 	"webserver/models"
 
 	"github.com/google/uuid"

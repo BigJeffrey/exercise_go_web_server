@@ -1,4 +1,4 @@
-package postgresqldao
+package persistence
 
 import (
 	"context"
