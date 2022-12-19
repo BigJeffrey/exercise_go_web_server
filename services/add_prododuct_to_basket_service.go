@@ -13,50 +13,50 @@ type AddProductToBasketService struct {
 	Dao interfaces.PostgresqlInterface
 }
 
-func (a *AddProductToBasketService) Add(basketId uuid.UUID, productId uuid.UUID, quantity int) (error, int) {
+func (a *AddProductToBasketService) Add(basketId uuid.UUID, productId uuid.UUID, quantity int) (int, error) {
 
 	basketRetrieved, err := a.Dao.GetBasketById(basketId)
 	if err != nil {
-		return errors.New("something went wrong"), http.StatusInternalServerError
+		return http.StatusInternalServerError, errors.New("something went wrong")
 	}
 	if basketRetrieved == nil {
-		return errors.New("basket not found"), http.StatusNotFound
+		return http.StatusNotFound, errors.New("basket not found")
 	}
 
 	product, err := a.Dao.GetProductById(productId)
 	if err != nil {
-		return errors.New("something went wrong"), http.StatusInternalServerError
+		return http.StatusInternalServerError, errors.New("something went wrong")
 	}
 	if product == nil {
-		return errors.New("product not found"), http.StatusNotFound
+		return http.StatusNotFound, errors.New("product not found")
 	}
 
 	if product.Quantity < quantity {
-		return errors.New("not enough products"), http.StatusBadRequest
+		return http.StatusBadRequest, errors.New("not enough products")
 	}
 
 	productInBasket, err := a.Dao.GetProductFromBasketById(basketId, productId)
 	if err != nil {
-		return err, http.StatusInternalServerError
+		return http.StatusInternalServerError, err
 	}
 
 	if productInBasket == nil {
 		err := a.createProductInBasket(basketId, productId, quantity)
 		if err != nil {
-			return errors.New("something went wrong"), http.StatusInternalServerError
+			return http.StatusInternalServerError, errors.New("something went wrong")
 		}
 	} else {
 		err = a.updateProductInBasket(*productInBasket, quantity)
 		if err != nil {
-			return err, http.StatusInternalServerError
+			return http.StatusInternalServerError, err
 		}
 	}
 
 	err = a.decreaseProductQuantity(product, quantity)
 	if err != nil {
-		return err, http.StatusInternalServerError
+		return http.StatusInternalServerError, err
 	}
-	return nil, http.StatusOK
+	return http.StatusOK, nil
 }
 
 func (a *AddProductToBasketService) createProductInBasket(basketId uuid.UUID, productId uuid.UUID, quantity int) error {

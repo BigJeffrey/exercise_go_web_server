@@ -33,7 +33,7 @@ func (b *BasketController) AddProductToBasket(w http.ResponseWriter, r *http.Req
 		return
 	}
 
-	err, code := b.AddProductToBasketService.Add(productRequest.BasketId, productRequest.ProductId, productRequest.Quantity)
+	code, err := b.AddProductToBasketService.Add(productRequest.BasketId, productRequest.ProductId, productRequest.Quantity)
 	if err != nil {
 		ApiError(w, err.Error(), code)
 		return
