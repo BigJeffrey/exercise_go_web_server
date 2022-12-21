@@ -3,8 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 	"io"
 	"net/http"
+	"webserver/consts"
 	"webserver/interfaces"
 	"webserver/models"
 	"webserver/services"
@@ -13,23 +15,24 @@ import (
 type BasketController struct {
 	PG                        interfaces.PostgresqlInterface
 	AddProductToBasketService *services.AddProductToBasketService
+	Log                       *zap.SugaredLogger
 }
 
-func NewBasketController(PG interfaces.PostgresqlInterface, addProductToBasketService *services.AddProductToBasketService) *BasketController {
-	return &BasketController{PG: PG, AddProductToBasketService: addProductToBasketService}
+func NewBasketController(PG interfaces.PostgresqlInterface, addProductToBasketService *services.AddProductToBasketService, Log *zap.SugaredLogger) *BasketController {
+	return &BasketController{PG: PG, AddProductToBasketService: addProductToBasketService, Log: Log}
 }
 
 func (b *BasketController) AddProductToBasket(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		ApiError(w, "can not decode request", http.StatusBadRequest)
+		ApiError(w, consts.CantDecodeError, http.StatusBadRequest)
 		return
 	}
 
 	var productRequest models.ProductToBasketRequest
 	err = json.Unmarshal(body, &productRequest)
 	if err != nil {
-		ApiError(w, "can not decode request", http.StatusBadRequest)
+		ApiError(w, consts.CantDecodeError, http.StatusBadRequest)
 		return
 	}
 
@@ -45,24 +48,26 @@ func (b *BasketController) AddProductToBasket(w http.ResponseWriter, r *http.Req
 func (b *BasketController) CreateBasket(w http.ResponseWriter, _ *http.Request) {
 	id, err := b.PG.CreateBasket()
 	if err != nil {
+		b.Log.Infof("something went wrong: %s", err.Error())
 		ApiError(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	b.Log.Infof("basket created: %v", id)
 	ApiSuccess(w, id.String(), http.StatusCreated)
 }
 
 func (b *BasketController) DeleteProductInBasket(w http.ResponseWriter, r *http.Request) {
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		ApiError(w, "can not decode request", http.StatusBadRequest)
+		ApiError(w, consts.CantDecodeError, http.StatusBadRequest)
 		return
 	}
 
 	var productRequest models.DeleteProductInBasketRequest
 	err = json.Unmarshal(body, &productRequest)
 	if err != nil {
-		ApiError(w, "can not decode request", http.StatusBadRequest)
+		ApiError(w, consts.CantDecodeError, http.StatusBadRequest)
 		return
 	}
 

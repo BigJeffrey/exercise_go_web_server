@@ -3,15 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
-	"webserver/interfaces"
 	"webserver/models"
-	"webserver/services"
 )
-
-type Controller struct {
-	Dao                       interfaces.PostgresqlInterface
-	AddProductToBasketService *services.AddProductToBasketService
-}
 
 func ReturnJSON(w http.ResponseWriter, responseModel interface{}, status int) {
 	w.Header().Set("Content-Type", "application/json")

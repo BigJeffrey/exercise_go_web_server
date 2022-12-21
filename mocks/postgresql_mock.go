@@ -10,22 +10,22 @@ import (
 	"github.com/google/uuid"
 )
 
-type PostgreSqlMock struct {
+type PostgresqlMock struct {
 	mock.Mock
 }
 
-func (m *PostgreSqlMock) CreateProduct(product models.Product) (uuid.UUID, error) {
+func (m *PostgresqlMock) CreateProduct(product models.Product) (uuid.UUID, error) {
 	//to implement
 	return product.ID, nil
 }
 
-func (m *PostgreSqlMock) GetProducts() ([]models.Product, error) {
+func (m *PostgresqlMock) GetProducts() ([]models.Product, error) {
 	//to implement
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) GetProductById(id uuid.UUID) (*models.Product, error) {
+func (m *PostgresqlMock) GetProductById(id uuid.UUID) (*models.Product, error) {
 	args := m.Called(id)
 
 	returnProduct, productOK := args.Get(0).(*models.Product)
@@ -43,18 +43,18 @@ func (m *PostgreSqlMock) GetProductById(id uuid.UUID) (*models.Product, error) {
 	}
 
 	if !productOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.GetProductById(%d) failed because object wasn't correct type: %v", id, args.Get(0)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.GetProductById(%d) failed because object wasn't correct type: %v", id, args.Get(0)))
 	}
 
 	if !errorOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.GetProductById(%d) failed because object wasn't correct type: %v", id, args.Get(1)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.GetProductById(%d) failed because object wasn't correct type: %v", id, args.Get(1)))
 	}
 
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) UpdateProduct(product models.Product) error {
+func (m *PostgresqlMock) UpdateProduct(product models.Product) error {
 	args := m.Called(product)
 
 	returnError, errorOK := args.Get(0).(error)
@@ -67,43 +67,43 @@ func (m *PostgreSqlMock) UpdateProduct(product models.Product) error {
 	}
 
 	if !errorOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.UpdateProduct(%d) failed because object wasn't correct type: %v", 0, args.Get(0)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.UpdateProduct(%d) failed because object wasn't correct type: %v", 0, args.Get(0)))
 	}
 
 	return nil
 }
 
-func (m *PostgreSqlMock) DeleteProduct(uuid.UUID) (sql.Result, error) {
+func (m *PostgresqlMock) DeleteProduct(uuid.UUID) (sql.Result, error) {
 	//to implement
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) FilterProduct(string) ([]models.Product, error) {
+func (m *PostgresqlMock) FilterProduct(string) ([]models.Product, error) {
 	//to implement
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) CreateBasket() (uuid.UUID, error) {
+func (m *PostgresqlMock) CreateBasket() (uuid.UUID, error) {
 	//to implement
 	return [16]byte{}, nil
 
 }
 
-func (m *PostgreSqlMock) GetProductsByPrice(models.PriceSelectRequest) ([]models.Product, error) {
+func (m *PostgresqlMock) GetProductsByPrice(models.PriceSelectRequest) ([]models.Product, error) {
 	//to implement
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) GetBaskets() ([]models.BasketProducts, error) {
+func (m *PostgresqlMock) GetBaskets() ([]models.BasketProducts, error) {
 	//to implement
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) GetBasketById(id uuid.UUID) (*models.Basket, error) {
+func (m *PostgresqlMock) GetBasketById(id uuid.UUID) (*models.Basket, error) {
 	args := m.Called(id)
 
 	returnBasket, basketOK := args.Get(0).(*models.Basket)
@@ -121,18 +121,18 @@ func (m *PostgreSqlMock) GetBasketById(id uuid.UUID) (*models.Basket, error) {
 	}
 
 	if !basketOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.GetBasketById(%d) failed because object wasn't correct type: %v", 0, args.Get(0)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.GetBasketById(%d) failed because object wasn't correct type: %v", 0, args.Get(0)))
 	}
 
 	if !errorOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.GetBasketById(%d) failed because object wasn't correct type: %v", 0, args.Get(1)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.GetBasketById(%d) failed because object wasn't correct type: %v", 0, args.Get(1)))
 	}
 
 	return nil, nil
 
 }
 
-func (m *PostgreSqlMock) AddProductToBasket(basketProducts models.BasketProducts) (uuid.UUID, error) {
+func (m *PostgresqlMock) AddProductToBasket(basketProducts models.BasketProducts) (uuid.UUID, error) {
 	args := m.Called(basketProducts)
 
 	returnID, idOK := args.Get(0).(uuid.UUID)
@@ -150,18 +150,18 @@ func (m *PostgreSqlMock) AddProductToBasket(basketProducts models.BasketProducts
 	}
 
 	if !idOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.AddProductToBasket(%d) failed because object wasn't correct type: %v", returnID, args.Get(0)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.AddProductToBasket(%d) failed because object wasn't correct type: %v", returnID, args.Get(0)))
 	}
 
 	if !errorOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.AddProductToBasket(%d) failed because object wasn't correct type: %v", returnError, args.Get(1)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.AddProductToBasket(%d) failed because object wasn't correct type: %v", returnError, args.Get(1)))
 	}
 
 	return uuid.UUID{}, nil
 
 }
 
-func (m *PostgreSqlMock) GetProductFromBasketById(uuid.UUID, uuid.UUID) (*models.BasketProducts, error) {
+func (m *PostgresqlMock) GetProductFromBasketById(uuid.UUID, uuid.UUID) (*models.BasketProducts, error) {
 	args := m.Called()
 
 	returnBasketProducts, basketProductsOK := args.Get(0).(*models.BasketProducts)
@@ -179,17 +179,17 @@ func (m *PostgreSqlMock) GetProductFromBasketById(uuid.UUID, uuid.UUID) (*models
 	}
 
 	if !basketProductsOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.GetProductFromBasketById(%d) failed because object wasn't correct type: %v", returnBasketProducts, args.Get(0)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.GetProductFromBasketById(%d) failed because object wasn't correct type: %v", returnBasketProducts, args.Get(0)))
 	}
 
 	if !errorOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.GetProductFromBasketById(%d) failed because object wasn't correct type: %v", returnError, args.Get(1)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.GetProductFromBasketById(%d) failed because object wasn't correct type: %v", returnError, args.Get(1)))
 	}
 
 	return nil, nil
 }
 
-func (m *PostgreSqlMock) UpdateProductInBasket(basketProducts models.BasketProducts) error {
+func (m *PostgresqlMock) UpdateProductInBasket(basketProducts models.BasketProducts) error {
 	args := m.Called(basketProducts)
 
 	returnError, errorOK := args.Get(0).(error)
@@ -202,17 +202,17 @@ func (m *PostgreSqlMock) UpdateProductInBasket(basketProducts models.BasketProdu
 	}
 
 	if !errorOK {
-		panic(fmt.Sprintf("assert: arguments: PostgreSqlMock.UpdateProductInBasket(%d) failed because object wasn't correct type: %v", returnError, args.Get(0)))
+		panic(fmt.Sprintf("assert: arguments: PostgresqlMock.UpdateProductInBasket(%d) failed because object wasn't correct type: %v", returnError, args.Get(0)))
 	}
 
 	return nil
 }
 
-func (m *PostgreSqlMock) DeleteProductFromBasket(models.BasketProducts) (sql.Result, error) {
+func (m *PostgresqlMock) DeleteProductFromBasket(models.BasketProducts) (sql.Result, error) {
 	//to implement
 	return nil, nil
 }
 
-func (m *PostgreSqlMock) Disconnect() {
+func (m *PostgresqlMock) Disconnect() {
 	//to implement
 }

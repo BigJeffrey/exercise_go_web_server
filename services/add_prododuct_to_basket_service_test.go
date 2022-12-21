@@ -13,7 +13,7 @@ import (
 )
 
 func TestAddProductToBasketService_Add_BasketThatNotExist(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -21,7 +21,7 @@ func TestAddProductToBasketService_Add_BasketThatNotExist(t *testing.T) {
 
 	daoMock.On("GetBasketById", mock.Anything, mock.Anything).Return(nil, nil).Once()
 
-	err, code := service.Add(uuid.New(), uuid.New(), 2)
+	code, err := service.Add(uuid.New(), uuid.New(), 2)
 	daoMock.AssertExpectations(t)
 
 	assert.Equal(t, err.Error(), "basket not found")
@@ -29,7 +29,7 @@ func TestAddProductToBasketService_Add_BasketThatNotExist(t *testing.T) {
 }
 
 func TestAddProductToBasketService_Add_FetchBasketError(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -37,7 +37,7 @@ func TestAddProductToBasketService_Add_FetchBasketError(t *testing.T) {
 
 	daoMock.On("GetBasketById", mock.Anything, mock.Anything).Return(nil, errors.New("postgresql error")).Once()
 
-	err, code := service.Add(uuid.New(), uuid.New(), 2)
+	code, err := service.Add(uuid.New(), uuid.New(), 2)
 	daoMock.AssertExpectations(t)
 
 	assert.NotNil(t, err, "add should return error")
@@ -46,7 +46,7 @@ func TestAddProductToBasketService_Add_FetchBasketError(t *testing.T) {
 }
 
 func TestAddProductToBasketService_Add_ProductThatNotExist(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -59,7 +59,7 @@ func TestAddProductToBasketService_Add_ProductThatNotExist(t *testing.T) {
 	daoMock.On("GetBasketById", mock.Anything).Return(basket, nil).Once()
 	daoMock.On("GetProductById", mock.Anything).Return(nil, nil).Once()
 
-	err, code := service.Add(uuid.New(), uuid.New(), 2)
+	code, err := service.Add(uuid.New(), uuid.New(), 2)
 	daoMock.AssertExpectations(t)
 
 	assert.Equal(t, err.Error(), "product not found")
@@ -67,7 +67,7 @@ func TestAddProductToBasketService_Add_ProductThatNotExist(t *testing.T) {
 }
 
 func TestAddProductToBasketService_Add_FetchProductError(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -80,7 +80,7 @@ func TestAddProductToBasketService_Add_FetchProductError(t *testing.T) {
 	daoMock.On("GetBasketById", mock.Anything).Return(basket, nil).Once()
 	daoMock.On("GetProductById", mock.Anything, mock.Anything).Return(nil, errors.New("postgresql error")).Once()
 
-	err, code := service.Add(uuid.New(), uuid.New(), 2)
+	code, err := service.Add(uuid.New(), uuid.New(), 2)
 	daoMock.AssertExpectations(t)
 
 	assert.NotNil(t, err, "add should return error")
@@ -90,7 +90,7 @@ func TestAddProductToBasketService_Add_FetchProductError(t *testing.T) {
 
 func TestAddProductToBasketService_Add_AddMoreProductsThanInStock(t *testing.T) {
 
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -109,7 +109,7 @@ func TestAddProductToBasketService_Add_AddMoreProductsThanInStock(t *testing.T) 
 	daoMock.On("GetBasketById", basket.ID).Return(basket, nil).Once()
 	daoMock.On("GetProductById", product.ID).Return(product, nil).Once()
 
-	err, code := service.Add(basket.ID, product.ID, product.Quantity+1) // more than in stock!
+	code, err := service.Add(basket.ID, product.ID, product.Quantity+1) // more than in stock!
 	daoMock.AssertExpectations(t)
 
 	assert.NotNil(t, err, "add should return error")
@@ -119,7 +119,7 @@ func TestAddProductToBasketService_Add_AddMoreProductsThanInStock(t *testing.T) 
 
 func TestAddProductToBasketService_Add_AddProductThatNotExitsInBasket(t *testing.T) {
 
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -151,7 +151,7 @@ func TestAddProductToBasketService_Add_AddProductThatNotExitsInBasket(t *testing
 		Status:   "unavailable",
 	}).Return(nil).Once()
 
-	err, _ := service.Add(basket.ID, product.ID, product.Quantity)
+	_, err := service.Add(basket.ID, product.ID, product.Quantity)
 	daoMock.AssertExpectations(t)
 
 	assert.True(t, daoMock.AssertNotCalled(t, "UpdateProductInBasket"))
@@ -159,7 +159,7 @@ func TestAddProductToBasketService_Add_AddProductThatNotExitsInBasket(t *testing
 }
 
 func TestAddProductToBasketService_Add_AddProductThatExistsInBasket(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -198,7 +198,7 @@ func TestAddProductToBasketService_Add_AddProductThatExistsInBasket(t *testing.T
 		Status:   "ordered",
 	}).Return(nil).Once()
 
-	err, code := service.Add(basket.ID, product.ID, 2)
+	code, err := service.Add(basket.ID, product.ID, 2)
 	daoMock.AssertExpectations(t)
 
 	assert.True(t, daoMock.AssertNotCalled(t, "AddProductToBasket"))
@@ -207,7 +207,7 @@ func TestAddProductToBasketService_Add_AddProductThatExistsInBasket(t *testing.T
 }
 
 func TestAddProductToBasketService_ErrorFetchingProductFromBasket(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -226,7 +226,7 @@ func TestAddProductToBasketService_ErrorFetchingProductFromBasket(t *testing.T) 
 	daoMock.On("GetProductById", mock.Anything).Return(product, nil).Once()
 	daoMock.On("GetProductFromBasketById").Return(nil, errors.New("postgresql error")).Once()
 
-	err, code := service.Add(basket.ID, product.ID, 2)
+	code, err := service.Add(basket.ID, product.ID, 2)
 	daoMock.AssertExpectations(t)
 
 	assert.NotNil(t, err, "add should return error")
@@ -235,7 +235,7 @@ func TestAddProductToBasketService_ErrorFetchingProductFromBasket(t *testing.T) 
 }
 
 func TestAddProductToBasketService_ErrorAddingProductToBasket(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -254,7 +254,7 @@ func TestAddProductToBasketService_ErrorAddingProductToBasket(t *testing.T) {
 	daoMock.On("GetProductById", mock.Anything).Return(product, nil).Once()
 	daoMock.On("GetProductFromBasketById").Return(nil, errors.New("postgresql error")).Once()
 
-	err, code := service.Add(basket.ID, product.ID, 2)
+	code, err := service.Add(basket.ID, product.ID, 2)
 	daoMock.AssertExpectations(t)
 
 	assert.NotNil(t, err, "add should return error")
@@ -263,7 +263,7 @@ func TestAddProductToBasketService_ErrorAddingProductToBasket(t *testing.T) {
 }
 
 func TestAddProductToBasketService_ErrorUpdatingProductInBasket(t *testing.T) {
-	daoMock := &postgresqldao.PostgreSqlMock{}
+	daoMock := &postgresqldao.PostgresqlMock{}
 
 	service := AddProductToBasketService{
 		Dao: daoMock,
@@ -285,7 +285,7 @@ func TestAddProductToBasketService_ErrorUpdatingProductInBasket(t *testing.T) {
 	daoMock.On("GetProductFromBasketById").Return(basketSum, nil).Once()
 	daoMock.On("UpdateProductInBasket", mock.Anything).Return(errors.New("postgresql error")).Once()
 
-	err, code := service.Add(basket.ID, product.ID, 2)
+	code, err := service.Add(basket.ID, product.ID, 2)
 	daoMock.AssertExpectations(t)
 
 	assert.NotNil(t, err, "add should return error")

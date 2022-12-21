@@ -1,6 +1,10 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/google/uuid"
+)
 
 type ErrorResponse struct {
 	Message string `json:"message"`
@@ -22,4 +26,13 @@ type BasketSummary struct {
 	BasketId      uuid.UUID
 	CountProducts int
 	TotalPrice    float64
+}
+
+func (e *ErrorResponse) Error() string {
+	errorString, err := json.Marshal(e)
+	if err != nil {
+		return fmt.Sprintf("failed to serialize the err: %v", err)
+	}
+
+	return string(errorString)
 }

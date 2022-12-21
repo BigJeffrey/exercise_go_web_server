@@ -8,7 +8,7 @@ import (
 	"webserver/models"
 )
 
-func (m *PostgreSql) GetProducts() ([]models.Product, error) {
+func (m *Postgresql) GetProducts() ([]models.Product, error) {
 	var product models.Product
 	var products []models.Product
 	sqlStatement := `SELECT * FROM products`
@@ -28,7 +28,7 @@ func (m *PostgreSql) GetProducts() ([]models.Product, error) {
 	return products, nil
 }
 
-func (m *PostgreSql) GetProductById(id uuid.UUID) (*models.Product, error) {
+func (m *Postgresql) GetProductById(id uuid.UUID) (*models.Product, error) {
 	var product models.Product
 	sqlStatement := `SELECT * FROM products WHERE id=$1`
 	err := m.client.QueryRow(sqlStatement, id).Scan(&product.ID, &product.Name, &product.Description, &product.Price, &product.Quantity, &product.Status)
@@ -44,7 +44,7 @@ func (m *PostgreSql) GetProductById(id uuid.UUID) (*models.Product, error) {
 	return &product, nil
 }
 
-func (m *PostgreSql) GetProductsByPrice(priceSelect models.PriceSelectRequest) ([]models.Product, error) {
+func (m *Postgresql) GetProductsByPrice(priceSelect models.PriceSelectRequest) ([]models.Product, error) {
 	var product models.Product
 	var products []models.Product
 
@@ -75,7 +75,7 @@ func (m *PostgreSql) GetProductsByPrice(priceSelect models.PriceSelectRequest) (
 	return products, nil
 }
 
-func (m *PostgreSql) CreateProduct(product models.Product) (uuid.UUID, error) {
+func (m *Postgresql) CreateProduct(product models.Product) (uuid.UUID, error) {
 	var id uuid.UUID
 	sqlStatement := `INSERT INTO products (name, description, price, quantity, status) VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	err := m.client.QueryRow(sqlStatement, product.Name, product.Description, product.Price, product.Quantity, product.Status).Scan(&id)
@@ -86,7 +86,7 @@ func (m *PostgreSql) CreateProduct(product models.Product) (uuid.UUID, error) {
 	return id, nil
 }
 
-func (m *PostgreSql) UpdateProduct(product models.Product) error {
+func (m *Postgresql) UpdateProduct(product models.Product) error {
 	sqlStatement := `UPDATE products SET name=$1, description=$2, price=$3, quantity=$4, status=$5 WHERE id=$6`
 	result, err := m.client.Exec(sqlStatement, product.Name, product.Description, product.Price, product.Quantity, product.Status, product.ID)
 	if err != nil {
@@ -105,12 +105,12 @@ func (m *PostgreSql) UpdateProduct(product models.Product) error {
 	return nil
 }
 
-func (m *PostgreSql) DeleteProduct(id uuid.UUID) (sql.Result, error) {
+func (m *Postgresql) DeleteProduct(id uuid.UUID) (sql.Result, error) {
 	sqlStatement := `DELETE FROM products WHERE id=$1`
 	return m.client.Exec(sqlStatement, id)
 }
 
-func (m *PostgreSql) FilterProduct(searche string) ([]models.Product, error) {
+func (m *Postgresql) FilterProduct(searche string) ([]models.Product, error) {
 	var product models.Product
 	var products []models.Product
 

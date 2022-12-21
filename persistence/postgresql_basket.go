@@ -8,7 +8,7 @@ import (
 	"webserver/models"
 )
 
-func (m *PostgreSql) CreateBasket() (uuid.UUID, error) {
+func (m *Postgresql) CreateBasket() (uuid.UUID, error) {
 	var id uuid.UUID
 	sqlStatement := `INSERT INTO baskets DEFAULT VALUES RETURNING id`
 	err := m.client.QueryRow(sqlStatement).Scan(&id)
@@ -19,7 +19,7 @@ func (m *PostgreSql) CreateBasket() (uuid.UUID, error) {
 	return id, nil
 }
 
-func (m *PostgreSql) GetBaskets() ([]models.BasketProducts, error) {
+func (m *Postgresql) GetBaskets() ([]models.BasketProducts, error) {
 	var basket models.BasketProducts
 	var baskets []models.BasketProducts
 	sqlStatement := `SELECT * FROM basket_products`
@@ -39,7 +39,7 @@ func (m *PostgreSql) GetBaskets() ([]models.BasketProducts, error) {
 	return baskets, nil
 }
 
-func (m *PostgreSql) GetBasketById(id uuid.UUID) (*models.Basket, error) {
+func (m *Postgresql) GetBasketById(id uuid.UUID) (*models.Basket, error) {
 	var basket models.Basket
 	sqlStatement := `SELECT * FROM baskets WHERE id=$1`
 	err := m.client.QueryRow(sqlStatement, id).Scan(&basket.ID)
@@ -55,7 +55,7 @@ func (m *PostgreSql) GetBasketById(id uuid.UUID) (*models.Basket, error) {
 	return &basket, nil
 }
 
-func (m *PostgreSql) AddProductToBasket(basketProducts models.BasketProducts) (uuid.UUID, error) {
+func (m *Postgresql) AddProductToBasket(basketProducts models.BasketProducts) (uuid.UUID, error) {
 	var id uuid.UUID
 	sqlStatement := `INSERT INTO basket_products (basketid, productid, quantity) VALUES ($1, $2, $3) RETURNING id`
 	err := m.client.QueryRow(sqlStatement, basketProducts.BasketID, basketProducts.ProductID, basketProducts.Quantity).Scan(&id)
@@ -66,7 +66,7 @@ func (m *PostgreSql) AddProductToBasket(basketProducts models.BasketProducts) (u
 	return id, nil
 }
 
-func (m *PostgreSql) GetProductFromBasketById(basketId uuid.UUID, productId uuid.UUID) (*models.BasketProducts, error) {
+func (m *Postgresql) GetProductFromBasketById(basketId uuid.UUID, productId uuid.UUID) (*models.BasketProducts, error) {
 	var basketProducts models.BasketProducts
 	sqlStatement := `SELECT * FROM basket_products WHERE productid=$1 AND basketid=$2`
 	err := m.client.QueryRow(sqlStatement, basketId, productId).Scan(&basketProducts.ID, &basketProducts.BasketID, &basketProducts.ProductID, &basketProducts.Quantity)
@@ -81,7 +81,7 @@ func (m *PostgreSql) GetProductFromBasketById(basketId uuid.UUID, productId uuid
 	return &basketProducts, nil
 }
 
-func (m *PostgreSql) UpdateProductInBasket(basketProducts models.BasketProducts) error {
+func (m *Postgresql) UpdateProductInBasket(basketProducts models.BasketProducts) error {
 	sqlStatement := `UPDATE basket_products SET basketid=$1, productid=$2, quantity=$3 WHERE id=$4`
 
 	result, err := m.client.Exec(sqlStatement, basketProducts.BasketID, basketProducts.ProductID, basketProducts.Quantity, basketProducts.ID)
@@ -102,7 +102,7 @@ func (m *PostgreSql) UpdateProductInBasket(basketProducts models.BasketProducts)
 	return nil
 }
 
-func (m *PostgreSql) DeleteProductFromBasket(basketProducts models.BasketProducts) (sql.Result, error) {
+func (m *Postgresql) DeleteProductFromBasket(basketProducts models.BasketProducts) (sql.Result, error) {
 	sqlStatement := `DELETE FROM basket_products WHERE basketid=$1 AND productid=$2`
 	return m.client.Exec(sqlStatement, basketProducts.BasketID, basketProducts.ProductID)
 }
